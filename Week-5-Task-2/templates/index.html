@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voice-Activated Smart Calculator — EE471</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="calculator-wrapper">
+    
+    <!-- Title & Voice Indicator -->
+    <div class="calc-header">
+      <h2>Voice-Activated Calculator</h2>
+      <p class="calc-sub">Click mic to speak, or click buttons to hear them talk!</p>
+    </div>
+
+    <!-- Voice Speech Feedback Pill -->
+    <div id="voice-status" class="voice-status" style="display: none;">
+      <span class="voice-dot"></span>
+      <span id="voice-text">Listening for command...</span>
+    </div>
+
+    <!-- Calculator Body (Matches Page 3 Diagram) -->
+    <div class="calculator">
+      
+      <!-- Display -->
+      <div class="display">
+        <span id="display">0</span>
+      </div>
+
+      <!-- Main Layout: Mic Button on Left + Keypad on Right -->
+      <div class="calc-body">
+        
+        <!-- Microphone Button on the Left -->
+        <button id="mic-btn" class="btn btn-mic" title="Click to speak a calculation (e.g. 'Five plus two is')">
+          <svg class="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+          <span class="mic-label">VOICE</span>
+        </button>
+
+        <!-- Keypad Grid (4 columns) -->
+        <div class="keypad">
+          <!-- Row 1 -->
+          <button class="btn btn-num" data-val="7" data-speech="Seven">7</button>
+          <button class="btn btn-num" data-val="8" data-speech="Eight">8</button>
+          <button class="btn btn-num" data-val="9" data-speech="Nine">9</button>
+          <button class="btn btn-op" data-val="÷" data-speech="over">÷</button>
+
+          <!-- Row 2 -->
+          <button class="btn btn-num" data-val="4" data-speech="Four">4</button>
+          <button class="btn btn-num" data-val="5" data-speech="Five">5</button>
+          <button class="btn btn-num" data-val="6" data-speech="Six">6</button>
+          <button class="btn btn-op" data-val="x" data-speech="times">x</button>
+
+          <!-- Row 3 -->
+          <button class="btn btn-num" data-val="1" data-speech="One">1</button>
+          <button class="btn btn-num" data-val="2" data-speech="Two">2</button>
+          <button class="btn btn-num" data-val="3" data-speech="Three">3</button>
+          <button class="btn btn-op" data-val="-" data-speech="minus">−</button>
+
+          <!-- Row 4 -->
+          <button class="btn btn-num" data-val="0" data-speech="Zero">0</button>
+          <button class="btn btn-num" data-val="." data-speech="point">.</button>
+          <button class="btn btn-equal" data-val="=" data-speech="is">=</button>
+          <button class="btn btn-op" data-val="+" data-speech="plus">+</button>
+        </div>
+
+      </div>
+
+      <!-- Quick Clear Button -->
+      <button id="clear-btn" class="btn-clear-calc">C</button>
+    </div>
+
+    <!-- Voice Command Quick Reference Guide -->
+    <div class="guide-card">
+      <h4>Try speaking these exact commands:</h4>
+      <ul>
+        <li>🗣️ <em>"Five plus two is"</em> ➔ <code>7</code></li>
+        <li>🗣️ <em>"Seven minus three is"</em> ➔ <code>4</code></li>
+        <li>🗣️ <em>"Three times two is"</em> ➔ <code>6</code></li>
+        <li>🗣️ <em>"Nine over three is"</em> ➔ <code>3</code></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
