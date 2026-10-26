@@ -10,6 +10,14 @@ env/
 venv/
 ENV/
 
+# Generated and temporary audio files
+*.wav
+*.mp3
+*.webm
+*.ogg
+static/audio/
+static/uploads/
+
 # Large video deliverables (keep local or commit as needed by assignment)
 *.avi
 *.mp4

@@ -3,61 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Text-to-Speech — Azure Speech Services</title>
+  <title>Azure Speech Services — EE471</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <div class="container">
     <div class="card">
       
-      <!-- Header -->
+      <!-- Main Header -->
       <div class="header">
         <div class="title-row">
-          <svg class="icon-speaker" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          <svg class="icon-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
           </svg>
-          <h1>Text-to-Speech</h1>
+          <h1>Azure Speech Services</h1>
         </div>
-        <p class="subtitle">Powered by Azure Cognitive Services</p>
+        <p class="subtitle">Text-to-Speech & Speech-to-Text powered by Azure Cognitive Services</p>
       </div>
 
-      <!-- Input Section -->
-      <div class="form-group">
-        <label for="text-input">Enter text to convert to speech:</label>
-        <textarea id="text-input" placeholder="Hello, EE471 class" rows="4">Hello, EE471 class</textarea>
+      <!-- Navigation Tabs (Part 3 Unified Architecture) -->
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="tts-tab">Text to Speech</button>
+        <button class="tab-btn" data-tab="stt-tab">Speech to Text</button>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="button-row">
-        <button id="synthesize-btn" class="btn btn-primary">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
-          </svg>
-          <span id="btn-text">Synthesize Speech</span>
-        </button>
-        <button id="clear-btn" class="btn btn-secondary">Clear</button>
-      </div>
-
-      <!-- Status Message Badge -->
-      <div id="status-badge" class="status-badge" style="display: none;">
-        <span id="status-text">✓ Speech synthesized successfully!</span>
-      </div>
-
-      <!-- Generated Audio Section -->
-      <div id="audio-section" class="audio-section" style="display: none;">
-        <label>Generated Audio:</label>
-        <div class="audio-wrapper">
-          <audio id="audio-player" controls preload="auto"></audio>
+      <!-- ============================================ -->
+      <!-- TAB 1: TEXT TO SPEECH                        -->
+      <!-- ============================================ -->
+      <div id="tts-tab" class="tab-content active">
+        <div class="form-group">
+          <label for="text-input">Enter text to convert to speech:</label>
+          <textarea id="text-input" placeholder="Hello, EE471 class" rows="4">Hello, EE471 class</textarea>
         </div>
-        <a id="download-btn" href="/download-audio" class="btn btn-download">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          Download Audio
-        </a>
+
+        <div class="button-row">
+          <button id="synthesize-btn" class="btn btn-primary">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+            </svg>
+            <span id="synth-btn-text">Synthesize Speech</span>
+          </button>
+          <button id="tts-clear-btn" class="btn btn-secondary">Clear</button>
+        </div>
+
+        <div id="tts-status-badge" class="status-badge" style="display: none;">
+          <span id="tts-status-text">✓ Speech synthesized successfully!</span>
+        </div>
+
+        <div id="tts-audio-section" class="audio-section" style="display: none;">
+          <label>Generated Audio:</label>
+          <div class="audio-wrapper">
+            <audio id="tts-audio-player" controls preload="auto"></audio>
+          </div>
+          <a id="download-btn" href="/download-audio" class="btn btn-download">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download Audio
+          </a>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- TAB 2: SPEECH TO TEXT                        -->
+      <!-- ============================================ -->
+      <div id="stt-tab" class="tab-content">
+        <div class="form-group">
+          <label>Record or upload audio to convert to text:</label>
+          
+          <div class="record-controls">
+            <button id="start-record-btn" class="btn btn-record">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="8"/>
+              </svg>
+              Start Recording
+            </button>
+
+            <button id="stop-record-btn" class="btn btn-stop" disabled>
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="6" width="12" height="12"/>
+              </svg>
+              Stop Recording
+            </button>
+
+            <label class="btn btn-file">
+              Choose File
+              <input type="file" id="audio-file-input" accept="audio/*" style="display: none;">
+            </label>
+          </div>
+
+          <div id="file-chosen-name" class="file-chosen-name">No file chosen</div>
+
+          <!-- Recording Indicator -->
+          <div id="recording-indicator" class="recording-indicator" style="display: none;">
+            <span class="pulsing-dot"></span>
+            <span>Recording...</span>
+          </div>
+
+          <!-- Preview Recorded/Uploaded Audio -->
+          <div id="stt-preview-section" style="display: none; margin-top: 10px;">
+            <audio id="stt-preview-player" controls style="width: 100%;"></audio>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="transcribe-btn" class="btn btn-primary" disabled>
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span id="transcribe-btn-text">Transcribe Audio</span>
+          </button>
+          <button id="stt-clear-btn" class="btn btn-secondary">Clear</button>
+        </div>
+
+        <div class="transcription-section">
+          <label>Transcription:</label>
+          <div class="transcription-box">
+            <textarea id="transcription-output" rows="4" readonly placeholder="Transcription will appear here..."></textarea>
+            <button id="copy-btn" class="btn btn-copy" title="Copy Text">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Copy Text
+            </button>
+          </div>
+        </div>
+
+        <div id="stt-status-badge" class="status-badge" style="display: none; margin-top: 16px;">
+          <span id="stt-status-text">✓ Audio transcribed successfully!</span>
+        </div>
       </div>
 
     </div>

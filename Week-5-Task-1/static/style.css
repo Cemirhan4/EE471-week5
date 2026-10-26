@@ -17,7 +17,7 @@ body {
 
 .container {
   width: 100%;
-  max-width: 500px;
+  max-width: 540px;
 }
 
 .card {
@@ -31,7 +31,7 @@ body {
 /* Header */
 .header {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .title-row {
@@ -41,7 +41,7 @@ body {
   margin-bottom: 4px;
 }
 
-.icon-speaker {
+.icon-cloud {
   width: 26px;
   height: 26px;
   color: #1976D2;
@@ -56,6 +56,49 @@ body {
 .subtitle {
   font-size: 13px;
   color: #757575;
+}
+
+/* Navigation Tabs (Part 3) */
+.tabs-nav {
+  display: flex;
+  border-bottom: 1px solid #E0E0E0;
+  margin-bottom: 24px;
+  gap: 12px;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #757575;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: #1976D2;
+}
+
+.tab-btn.active {
+  color: #1976D2;
+  border-bottom-color: #1976D2;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Form */
@@ -100,23 +143,24 @@ textarea:focus {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 18px;
-  font-size: 14px;
+  padding: 9px 16px;
+  font-size: 13px;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.15s, opacity 0.15s;
+  transition: all 0.15s;
   border: 1px solid transparent;
   text-decoration: none;
+  user-select: none;
 }
 
 .btn-icon {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
 }
 
 .btn-primary {
-  background-color: #1E88E5;
+  background-color: #1976D2;
   color: #FFFFFF;
   flex: 1;
 }
@@ -137,8 +181,111 @@ textarea:focus {
 }
 
 .btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Record Controls (STT) */
+.record-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-record {
+  background-color: #1976D2;
+  color: #FFFFFF;
+}
+
+.btn-record:hover {
+  background-color: #1565C0;
+}
+
+.btn-stop {
+  background-color: #D32F2F;
+  color: #FFFFFF;
+}
+
+.btn-stop:hover {
+  background-color: #C62828;
+}
+
+.btn-file {
+  background-color: #F5F5F5;
+  color: #424242;
+  border-color: #CCCCCC;
+}
+
+.btn-file:hover {
+  background-color: #EAEAEA;
+}
+
+.file-chosen-name {
+  font-size: 12px;
+  color: #757575;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* Recording Indicator */
+.recording-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FFEBEE;
+  color: #C62828;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.pulsing-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #D32F2F;
+  border-radius: 50%;
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 0.4; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1.15); }
+}
+
+/* Transcription Output */
+.transcription-section label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #424242;
+  margin-bottom: 8px;
+}
+
+.transcription-box {
+  position: relative;
+}
+
+.transcription-box textarea {
+  padding-bottom: 40px;
+  background-color: #FBFBFB;
+}
+
+.btn-copy {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #D0D7DE;
+  color: #555555;
+  font-size: 12px;
+  padding: 4px 10px;
+}
+
+.btn-copy:hover {
+  background-color: #F5F5F5;
+  color: #1976D2;
 }
 
 /* Status Badge */
@@ -160,7 +307,7 @@ textarea:focus {
   color: #C62828;
 }
 
-/* Audio Section */
+/* Audio Section (TTS) */
 .audio-section {
   padding-top: 16px;
   border-top: 1px solid #EEEEEE;
