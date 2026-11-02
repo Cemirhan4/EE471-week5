@@ -4,7 +4,8 @@ import time
 from flask import Flask, render_template, request, jsonify, send_file
 from dotenv import load_dotenv
 
-# Load environment variables from .env
+# Load environment variables from .env (check current dir, then parent)
+load_dotenv()
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 app = Flask(__name__)
@@ -239,4 +240,4 @@ def download_audio():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)

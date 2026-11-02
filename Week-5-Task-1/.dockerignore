@@ -1,0 +1,12 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.git
+.gitignore
+.env
+static/audio/*.wav
+static/audio/*.mp3
+static/uploads/*.wav
+*.avi
+*.mp4

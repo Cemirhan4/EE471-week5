@@ -2,7 +2,8 @@ import os
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 
-# Load environment variables from .env
+# Load environment variables from .env (check current dir, then parent)
+load_dotenv()
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 app = Flask(__name__)
@@ -15,11 +16,13 @@ SPEECH_REGION = os.getenv('SPEECH_REGION', 'eastus').strip()
 WORD_TO_MATH = {
     'zero': '0', 'one': '1', 'two': '2', 'three': '3', 'four': '4',
     'five': '5', 'six': '6', 'seven': '7', 'eight': '8', 'nine': '9',
+    'ten': '10', 'eleven': '11', 'twelve': '12',
     'point': '.', 'dot': '.',
     'plus': '+', 'add': '+',
     'minus': '-', 'subtract': '-',
     'times': '*', 'multiply': '*', 'multiplied by': '*',
-    'over': '/', 'divided by': '/', 'divide': '/',
+    'over': '/', 'divided by': '/', 'divide by': '/', 'divided': '/', 'divide': '/', 'slash': '/', 'by': '/',
+    'hour': '/', 'our': '/',
     'is': '=', 'equals': '=', 'equal': '='
 }
 
@@ -98,14 +101,45 @@ def parse_voice_command():
     Parses a recognized spoken text command (e.g. "Five plus two is" or "Nine over three is")
     and returns parsed operands, operator, and computed result.
     """
+    import re
+
     data = request.get_json()
     if not data or not data.get('text', '').strip():
         return jsonify({'error': 'No voice command received.'}), 400
 
     raw_text = data.get('text').strip().lower()
+    print(f"[VOICE COMMAND DEBUG] Raw text received: '{raw_text}'")
 
-    # Normalize punctuation and spaces
-    for punct in [',', '.', '!', '?', ';']:
+    # Step 1: Replace multi-word math phrases first before splitting
+    phrases = [
+        ('divided by', ' / '),
+        ('divide by', ' / '),
+        ('divided', ' / '),
+        ('multiplied by', ' * '),
+        ('multiply by', ' * '),
+        ('times by', ' * '),
+        ('plus', ' + '),
+        ('minus', ' - '),
+        ('times', ' * '),
+        ('multiply', ' * '),
+        ('over', ' / '),
+        ('slash', ' / '),
+        ('equals', ' = '),
+        ('equal', ' = '),
+        ('is', ' = ')
+    ]
+    for ph, rep in phrases:
+        raw_text = re.sub(r'\b' + re.escape(ph) + r'\b', rep, raw_text)
+
+    # Step 2: Ensure spaces around math symbols so "9/3" -> "9 / 3" or "5+2" -> "5 + 2"
+    for sym in ['+', '-', '*', '/', '÷', '×', '=']:
+        raw_text = raw_text.replace(sym, f' {sym} ')
+
+    # Step 3: Handle single 'x' as multiplication (e.g. "3 x 2")
+    raw_text = re.sub(r'\bx\b', ' * ', raw_text)
+
+    # Step 4: Remove unwanted punctuation but keep dots for decimals
+    for punct in [',', '!', '?', ';', ':', '"', "'"]:
         raw_text = raw_text.replace(punct, ' ')
 
     tokens = raw_text.split()
@@ -114,13 +148,16 @@ def parse_voice_command():
     for t in tokens:
         if t in WORD_TO_MATH:
             translated_tokens.append(WORD_TO_MATH[t])
-        elif t.isdigit():
+        elif re.match(r'^-?\d+(\.\d+)?$', t):
             translated_tokens.append(t)
         elif t in ['+', '-', '*', '/', '=']:
             translated_tokens.append(t)
+        elif t == '÷':
+            translated_tokens.append('/')
+        elif t == '×':
+            translated_tokens.append('*')
 
-    # Reconstruct tokens: Expecting <num1> <op> <num2> [=]
-    # Filter tokens into num1, op, num2
+    # Reconstruct: Find numbers and operator
     nums = []
     op = None
 
@@ -132,9 +169,21 @@ def parse_voice_command():
         else:
             nums.append(t)
 
+    # If operator is still missing but we have 2 numbers and raw text contains "over", "by", etc.
+    if not op and len(nums) >= 2:
+        if any(w in data.get('text', '').lower() for w in ['over', 'divide', 'div', '/']):
+            op = '/'
+        elif any(w in data.get('text', '').lower() for w in ['times', 'multi', '*', 'x']):
+            op = '*'
+        elif any(w in data.get('text', '').lower() for w in ['plus', 'add', '+']):
+            op = '+'
+        elif any(w in data.get('text', '').lower() for w in ['minus', 'sub', '-']):
+            op = '-'
+
     if len(nums) < 2 or not op:
+        print(f"[VOICE COMMAND DEBUG] Failed to parse. nums={nums}, op={op}, translated={translated_tokens}")
         return jsonify({
-            'error': f"Could not parse equation from '{data.get('text')}'. Expected format like 'Five plus two is'."
+            'error': f"Could not parse equation from '{data.get('text')}'. Expected format like 'Nine over three is'."
         }), 400
 
     try:
@@ -143,7 +192,7 @@ def parse_voice_command():
     except ValueError:
         return jsonify({'error': 'Invalid numeric values recognized.'}), 400
 
-    # Compute
+    # Safe computation without eval()
     if op == '+':
         res = n1 + n2
     elif op == '-':
@@ -171,9 +220,4 @@ def parse_voice_command():
 
 
 if __name__ == '__main__':
-    # Try port 5000 first; if busy, switch to port 5002
-    try:
-        app.run(debug=True, port=5000)
-    except OSError:
-        print("Port 5000 busy, running on port 5002...")
-        app.run(debug=True, port=5002)
+    app.run(host='0.0.0.0', port=5002, debug=True)

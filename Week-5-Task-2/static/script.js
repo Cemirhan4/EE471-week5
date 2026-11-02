@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // Speak result
           speak(data.spoken_sentence || `is ${data.result}`);
         } else {
-          voiceText.textContent = data.error || 'Could not understand command.';
+          voiceText.textContent = `${data.error || 'Could not understand command.'} (Heard: "${transcript}")`;
           speak('Could not understand');
         }
       } catch (err) {

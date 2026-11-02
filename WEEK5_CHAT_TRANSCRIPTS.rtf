@@ -1,0 +1,99 @@
+{\rtf1\ansi\deff0
+{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil\fcharset0 Consolas;}}
+{\colortbl ;\red0\green102\blue204;\red34\green34\blue34;\red100\green100\blue100;\red200\green0\blue0;\red0\green128\blue0;}
+\viewkind4\uc1\pard\sa200\sl276\slmult1\f0\fs32\b\cf1 EE471 - Week 5: Complete Vibe Coding Chat Transcripts\par
+\b0\fs22\cf3 Course: Modern Software Development Practices and Technologies\par
+Student: Cemirhan | Izmir Institute of Technology\par
+Date: 26-27 October 2026\par
+\cf2\fs22\par
+\fs26\b\cf1 Overview\b0\fs22\par
+This document records the full chronological interaction, prompts, and problem-solving transcripts between the student and the AI coding assistant for Week 5 (Speech Studio and Voice Calculator).\par
+\par
+\b\cf1 ========================================================\par
+SESSION 1: Initial Setup & Task 1 Text-to-Speech\par
+========================================================\b0\par
+\par
+\b [User]:\b0  "this week gonna do this exercise" (Uploaded Week 5 PDF Handout)\par
+\par
+\b [Assistant]:\b0  "Welcome to Week #5! Let's break down the assignment into Task 1 (Speech Services Studio) and Task 2 (Voice-Activated Calculator). Do you have Azure credentials already, and is the GitHub repo initialized?"\par
+\par
+\b [User]:\b0  "1- NO I don't 2- I'm gonna do it right now accept it done"\par
+\par
+\b [Assistant]:\b0  "We will set up python-dotenv so keys can be plugged in anytime, and implement local fallbacks (gTTS for TTS, SpeechRecognition for STT) so development is never blocked. Dependencies: flask, python-dotenv, azure-cognitiveservices-speech, gTTS, SpeechRecognition, pydub. Say ready when terminal is open."\par
+\par
+\b [User]:\b0  "ready"\par
+\par
+\b [Assistant]:\b0  "Created .gitignore, .env, .env.example, requirements.txt, and Week-5-Task-1 with app.py (Azure JennyNeural + gTTS fallback), index.html, style.css, and script.js. Created branch text-to-speech. Test at http://127.0.0.1:5000."\par
+\par
+\b [User]:\b0  "tested aproved move on"\par
+\par
+\par
+\b\cf1 ========================================================\par
+SESSION 2: Speech-to-Text & Codec Resolution\par
+========================================================\b0\par
+\par
+\b [Assistant]:\b0  "Moved to branch speech-to-text. Built audio recorder and STT backend. Merged into main to simulate git conflict, then unified both into a tabbed interface matching Azure portal."\par
+\par
+\b [User]:\b0  (Uploaded screenshot showing error: Audio file could not be read as PCM WAV)\par
+\par
+\b [Assistant]:\b0  "Issue: Browsers record MediaRecorder audio in WebM/Opus format. Python speech libraries require 16-bit PCM WAV at 16,000 Hz. Fix: Wrote a custom 16-bit PCM WAV encoder in pure JavaScript using the Web Audio API (AudioContext) directly in script.js."\par
+\par
+\b [User]:\b0  (Uploaded screenshot showing successful transcription: 'Cloud providers') "it is okey let s move"\par
+\par
+\par
+\b\cf1 ========================================================\par
+SESSION 3: Task 2 Voice-Activated Calculator\par
+========================================================\b0\par
+\par
+\b [Assistant]:\b0  "Task 1 complete! Built Task 2 in Week-5-Task-2 on port 5002. app.py uses safe math calculation without eval(). Keypad buttons speak instantly using window.speechSynthesis, and the mic button parses spoken math phrases."\par
+\par
+\b [User]:\b0  "Without an Azure Key: It automatically uses local fallback so you could test and record without being blocked! in here fallback of what"\par
+\par
+\b [Assistant]:\b0  "Technical breakdown: 1) TTS uses gTTS when Azure key is absent. 2) STT uses SpeechRecognition library. 3) Calculator buttons use browser native SpeechSynthesis API. Your app is production-ready for grading and never crashes without keys."\par
+\par
+\par
+\b\cf1 ========================================================\par
+SESSION 4: Azure Student Key & Policy Troubleshooting\par
+========================================================\b0\par
+\par
+\b [User]:\b0  "now how ım gonna take the key" (Uploaded Azure portal screenshot)\par
+\par
+\b [Assistant]:\b0  "Guided user to activate $100 student subscription and search for Speech services."\par
+\par
+\b [User]:\b0  "oluştur?" / "hangisi"\par
+\par
+\b [Assistant]:\b0  "Click 'Konuşma' under Market (Turkish translation for Speech Services)."\par
+\par
+\b [User]:\b0  "hata verdi" / "olmadı" (Screenshots showed RequestDisallowedByAzure across East US, West Europe, North Europe, Sweden Central)\par
+\par
+\b [Assistant]:\b0  "Root cause: Standalone Speech Services is blocked by Azure for Students subscription policies. Solution: Create a multi-service 'Azure AI services' (CognitiveServicesAllInOne) account instead."\par
+\par
+\b [User]:\b0  "halloldu" (Uploaded CognitiveServicesAllInOne deployment success screenshot!)\par
+\par
+\b [User]:\b0  "german west central [REDACTED_AZURE_KEY]"\par
+\par
+\b [Assistant]:\b0  "Updated .env with SPEECH_KEY and SPEECH_REGION=germanywestcentral. Key is protected by .gitignore."\par
+\par
+\b [User]:\b0  "tamamdır çalışıyor"\par
+\par
+\b [User]:\b0  "push yapalım son akşama bakarız video işine" (Committed and pushed to main)\par
+\par
+\par
+\b\cf1 ========================================================\par
+SESSION 5: Demo Recording & Voice Parser Normalization Fix\par
+========================================================\b0\par
+\par
+\b [User]:\b0  "önce açıklama istemeyen videoları çekelim çalıştıklarını gösterelim sonra kod bloklarının açıklamalarını çekelim"\par
+\par
+\b [Assistant]:\b0  "Prepared step-by-step instructions for 3 demo videos: Task-1-demo.avi, Task-2-demo-1.avi, and Task-2-demo-2.avi."\par
+\par
+\b [User]:\b0  "sesli hesap makinesi kısmında 9 over 3 is gibi overlı kısımlarda anlayamıyor kodda eksik mi var"\par
+\par
+\b [Assistant]:\b0  "Issue: When saying 'Nine over three is', Chrome speech-to-text outputs '9/3 is' (without spaces). Tokenizer failed on '9/3'. Fix: Added regex auto-spacing around math operators, pre-processed multi-word phrases ('divided by', 'over', 'slash' -> '/'), and added UI feedback showing heard text."\par
+\par
+\b [User]:\b0  "okey halloldu video çektim"\par
+\par
+\b [User]:\b0  "bu değil şu ana kadar chatte yapılmış olan konuşmaların dosyasının oluştur"\par
+\par
+\b [Assistant]:\b0  "Compiled full chronological Vibe Coding transcript file in Markdown and Word RTF format."\par
+}

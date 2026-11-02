@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Kind Classifier | EE471 Cog Container</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-decorations">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <main class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="badge">🐾 EE471 Week 6 &bull; Cog Machine Learning</div>
+            <h1>Cat Kind Classifier</h1>
+            <p>Upload a cat photo to identify its breed and species using a pre-trained ResNet-50 vision model packaged with Replicate's Cog.</p>
+        </header>
+
+        <!-- Main Card -->
+        <div class="card-grid">
+            <!-- Left: Upload Section -->
+            <section class="card upload-card">
+                <div class="card-title">
+                    <span class="step-num">1</span>
+                    <h2>Upload Cat Image</h2>
+                </div>
+
+                <div class="drop-zone" id="dropZone">
+                    <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp" hidden>
+                    <div class="drop-content" id="dropContent">
+                        <div class="upload-icon">📷</div>
+                        <p class="drop-text"><strong>Click to browse</strong> or drag & drop a cat photo here</p>
+                        <span class="file-hint">Supports PNG, JPG, WEBP (Max 16MB)</span>
+                    </div>
+                    <div class="image-preview-container" id="previewContainer" style="display: none;">
+                        <img id="imagePreview" src="" alt="Preview">
+                        <button type="button" class="btn-remove" id="btnRemove">✕ Remove Image</button>
+                    </div>
+                </div>
+
+                <div class="sample-actions">
+                    <span class="sample-label">Quick test examples:</span>
+                    <div class="sample-buttons">
+                        <button type="button" class="btn-sample" onclick="loadSampleCat('tiger_cat')">🐱 Tiger Cat</button>
+                        <button type="button" class="btn-sample" onclick="loadSampleCat('tabby')">🐈 Tabby</button>
+                        <button type="button" class="btn-sample" onclick="loadSampleCat('persian')">🦁 Persian</button>
+                    </div>
+                </div>
+
+                <button id="btnClassify" class="btn-primary" disabled>
+                    <span class="btn-text">⚡ Classify Cat Breed</span>
+                    <span class="btn-spinner" style="display: none;"></span>
+                </button>
+            </section>
+
+            <!-- Right: Results Section -->
+            <section class="card results-card">
+                <div class="card-title">
+                    <span class="step-num">2</span>
+                    <h2>Prediction Results</h2>
+                </div>
+
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">🐱🔎</div>
+                    <h3>No Image Classified Yet</h3>
+                    <p>Select or drag a cat photo on the left and click "Classify Cat Breed" to see real-time inference results from the Cog container.</p>
+                </div>
+
+                <div id="resultsContainer" class="results-container" style="display: none;">
+                    <div class="top-match-banner" id="topMatchBanner">
+                        <span class="top-label">TOP PREDICTION</span>
+                        <h3 id="topBreedName">Tiger Cat</h3>
+                        <div class="top-confidence" id="topConfidence">89.4%</div>
+                    </div>
+
+                    <h4 class="sub-heading">Top 5 Model Predictions</h4>
+                    <div class="prediction-list" id="predictionList">
+                        <!-- Filled dynamically -->
+                    </div>
+
+                    <div class="cog-meta-box">
+                        <div class="meta-row">
+                            <span class="meta-key">Inference Backend:</span>
+                            <span class="meta-val highlight">Cog (ResNet-50 ImageNet)</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-key">Endpoint:</span>
+                            <span class="meta-val">POST /predictions</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>EE471 Week 6 &bull; Containerized AI &amp; Cog Microservice Architecture &bull; <a href="https://github.com/replicate/cog" target="_blank" rel="noopener">Cog Documentation</a></p>
+        </footer>
+    </main>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
